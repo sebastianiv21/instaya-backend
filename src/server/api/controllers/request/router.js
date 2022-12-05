@@ -1,5 +1,5 @@
 import express from 'express';
-import { findRequestsByUser, saveRequest } from '@models/Request/queries';
+import { findRequestsByUser, saveRequest, updateRequest } from '@models/Request/queries';
 import { logger, validate } from '../../middlewares';
 import { hasSession } from '../../middlewares/authorization';
 import { newRequestSchema } from './schemas';
@@ -29,6 +29,23 @@ router.post(
 			const payload = await saveRequest(session_payload.id, body);
 
 			res.status(200).json({ payload, message: 'Request saved!' });
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error(error);
+			res.status(500).json(error.message);
+		}
+	},
+);
+
+router.put(
+	'/:id',
+	hasSession,
+	validate(newRequestSchema),
+	async ({ body, session_payload, params }, res) => {
+		try {
+			const payload = await updateRequest(params.id, session_payload.id, body);
+
+			res.status(200).json({ payload, message: 'Request updated!' });
 		} catch (error) {
 			// eslint-disable-next-line no-console
 			console.error(error);

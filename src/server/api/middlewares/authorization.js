@@ -61,7 +61,7 @@ export const signTokenPair = async (payload) => {
  */
 export const verifyToken = (token, kind = 'access') => {
 	const key = readFileSync(join(process.cwd(), `/keys/${kind}.public.pem`));
-
+	
 	const { id, version } = verify(token, key, {
 		algorithm: 'ES256',
 		ignoreExpiration: false,
@@ -73,9 +73,7 @@ export const verifyToken = (token, kind = 'access') => {
 const headerLength = 'Bearer '.length;
 
 export const hasSession = async (req, res, next) => {
-	const { authorization } = req.headers;
-	const token = authorization.substring(headerLength);
-
+	const { authorization: token } = req.headers;
 	if (!token) {
 		return res.status(401).json([
 			{

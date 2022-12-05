@@ -40,3 +40,38 @@ export async function saveRequest(userId, body) {
 	await request.save();
 	return request;
 }
+
+export async function updateRequest(requestId,userId, body) {
+	const {
+		isFragile,
+		width,
+		height,
+		depth,
+		weight,
+		due,
+		fromCity,
+		fromAddress,
+		toCity,
+		toAddress,
+		toOwner,
+		toOwnerId,
+	} = body;
+
+	const payload = {
+		fromOwner: userId,
+		isFragile,
+		width,
+		height,
+		depth,
+		weight,
+		due,
+		fromCity,
+		fromAddress,
+		toCity,
+		toAddress,
+		toOwner,
+		toOwnerId,
+	};
+
+	return await Request.findByIdAndUpdate(requestId, payload, { new: true });
+}
